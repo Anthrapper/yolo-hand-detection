@@ -55,6 +55,9 @@ for file in files:
           (os.path.basename(file), round(inference_time, 2), len(results)))
 
     output = []
+    
+    cv2.namedWindow('image', cv2.WINDOW_NORMAL)
+    cv2.resizeWindow('image', 848, 640)
 
     # cv2.namedWindow('image', cv2.WINDOW_NORMAL)
     # cv2.resizeWindow('image', 1024, 768)
@@ -68,14 +71,19 @@ for file in files:
         detection_count += 1
         # draw a bounding box rectangle and label on the image
         color = (255, 0, 255)
-
+        cv2.rectangle(mat, (x, y), (x + w, y + h), color, 1)
+        text = "%s (%s)" % (name, round(confidence, 2))
+        cv2.putText(mat, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.25, color, 1)
         print("%s with %s confidence" % (name, round(confidence, 2)))
         
         file_name = os.path.basename(file)
         files = os.path.splitext(file_name)    
         crop_img = mat[y:y+h, x:x+w]
         output.append(crop_img)
-
+    # show the output image
+        cv2.imshow('image', mat)
+        cv2.waitKey(0)
     for i, roi in enumerate(output):
         cv2.imwrite(f"export/{files[0]}_{i}_cropped.jpg", roi)
 
