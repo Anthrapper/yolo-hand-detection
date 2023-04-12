@@ -1,0 +1,8 @@
+.idea
+venv
+models/*.cfg
+models/*.weights
+*.pyc
+export/
+images/
+new/
