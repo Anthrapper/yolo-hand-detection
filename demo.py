@@ -2,7 +2,7 @@ import argparse
 import glob
 import os,shutil
 
-import cv2
+import cv2,re
 
 from yolo import YOLO
 
@@ -37,7 +37,7 @@ if args.images.endswith(".txt"):
         lines = myfile.readlines()
         files = map(lambda x: os.path.join(os.path.dirname(args.images), x.strip()), lines)
 else:
-    files = sorted(glob.glob("%s/*.jpg" % args.images))
+    files = sorted(glob.glob("{}/*.[jJ][pP][eE][gG]".format(args.images)) + glob.glob("{}/*.png".format(args.images)))
 
 conf_sum = 0
 detection_count = 0
