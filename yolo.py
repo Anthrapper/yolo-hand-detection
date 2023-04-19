@@ -5,7 +5,6 @@ import numpy as np
 
 
 class YOLO:
-
     def __init__(self, config, model, labels, size=416, confidence=0.5, threshold=0.3):
         self.confidence = confidence
         self.threshold = threshold
@@ -15,8 +14,10 @@ class YOLO:
         try:
             self.net = cv2.dnn.readNetFromDarknet(config, model)
         except:
-            raise ValueError("Couldn't find the models!\nDid you forget to download them manually (and keep in the "
-                             "correct directory, models/) or run the shell script?")
+            raise ValueError(
+                "Couldn't find the models!\nDid you forget to download them manually (and keep in the "
+                "correct directory, models/) or run the shell script?"
+            )
 
         ln = self.net.getLayerNames()
         for i in self.net.getUnconnectedOutLayers():
@@ -29,7 +30,9 @@ class YOLO:
     def inference(self, image):
         ih, iw = image.shape[:2]
 
-        blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (self.size, self.size), swapRB=True, crop=False)
+        blob = cv2.dnn.blobFromImage(
+            image, 1 / 255.0, (self.size, self.size), swapRB=True, crop=False
+        )
         self.net.setInput(blob)
         start = time.time()
         layerOutputs = self.net.forward(self.output_names)
@@ -39,7 +42,6 @@ class YOLO:
         boxes = []
         confidences = []
         classIDs = []
-
         for output in layerOutputs:
             # loop over each of the detections
             for detection in output:
@@ -63,7 +65,7 @@ class YOLO:
                     y = int(centerY - (height / 2))
                     # update our list of bounding box coordinates, confidences,
                     # and class IDs
-                    boxes.append([x, y, int(width*1.5), int(height*2)])
+                    boxes.append([x, y, int(width * 1.5), int(height * 2)])
                     confidences.append(float(confidence))
                     classIDs.append(classID)
 
